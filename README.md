@@ -17,9 +17,10 @@ Lithium Ion Battery SPMe with Mechanical, Thermal and Degradation
 * Run plot_plating.m to get Basic plots (needs to be updated for temperature, mechanical plots, concentration plots and SEI)
 * Run plot_slider_pl.m to plot the side reaction overpotentials and current across the electrode as a function of time
 
-
-
 ### Who do I talk to? ###
 
 * Sravan Pannala (spannala@umich.edu)
 * Dr. Jason B. Siegel (siegeljb@umich.edu)
+
+© 2022 by the Regents of the University of Michigan.
+http://creativecommons.org/licenses/by/4.0/
