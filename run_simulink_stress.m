@@ -16,7 +16,7 @@ Iin = -5*5;
 %  2 for Pulses
 %  3 for CC-CV
 %  4 for Manual Input
-sw = 3;
+sw = 2;
 % exp_sw = -1;
 % Manual Current Input
 for k = 1:simtime+1
