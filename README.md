@@ -24,3 +24,6 @@ Lithium Ion Battery SPMe with Mechanical, Thermal and Degradation
 
 © 2022 by the Regents of the University of Michigan.
 http://creativecommons.org/licenses/by/4.0/
+
+
+S. Pannala, P. Valecha, P. Mohtat, J. B. Siegel and A. G. Stefanopoulou, "Electrochemical Battery State Estimation Under Parameter Uncertainty Caused by Aging Using Expansion Measurements," 2021 American Control Conference (ACC), New Orleans, LA, USA, 2021, pp. 3088-3093, doi: 10.23919/ACC50511.2021.9482886.
