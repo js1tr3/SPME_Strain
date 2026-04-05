@@ -30,11 +30,11 @@ CC.Tref = 273.15;
 % Electrode Parameters
 CC.Ds_n = 5e-15; % Ds_n (m^2/s)         Graphite 0.4
 CC.Ds_p = 8e-15; % Ds_p_1 (m^2/s)      NMC 0.025
-nr = 50;
+nr = 11;
 CC.nr = nr; % Number of elements in the solid particle
-CC.nn = 50;  %number of elements in the negative electrode
-CC.ns = 25;  %number of elements in the separator
-CC.np = 50; %number of elements in the positive electrode
+CC.nn = 13;  %number of elements in the negative electrode
+CC.ns = 5;  %number of elements in the separator
+CC.np = 11; %number of elements in the positive electrode
 CC.Rn_0 = 2.5e-06;  % Radius of Particle       Graphite
 CC.Rp_0 = 3.5e-06; % Radius of Particle       NMC
 CC.del_n = 6.2e-05; % Electrode Thickness         Graphite
@@ -152,42 +152,43 @@ De_p=CC.D_e*epsilon_e_p^CC.brugg;
 De_n=CC.D_e*epsilon_e_n^CC.brugg;
 
 
-% Positive | Seperator | Negative
-A=diag([De_p/epsilon_e_p/dx_p/dx_p*(-2)*ones(1,np+1),De_s/epsilon_e_s/dx_s/dx_s*(-2)*ones(1,ns),De_n/epsilon_e_n/dx_n/dx_n*(-2)*ones(1,nn)])+...
-    diag([De_p/epsilon_e_p/dx_p/dx_p*ones(1,np),De_s/epsilon_e_s/dx_s/dx_s*ones(1,ns),De_n/epsilon_e_n/dx_n/dx_n*ones(1,nn)],1)+...
-    diag([De_p/epsilon_e_p/dx_p/dx_p*ones(1,np),De_s/epsilon_e_s/dx_s/dx_s*ones(1,ns),De_n/epsilon_e_n/dx_n/dx_n*ones(1,nn)],-1);
+% Negative | Seperator | Positive
+A=diag([De_n/epsilon_e_n/dx_n/dx_n*(-2)*ones(1,nn+1),De_s/epsilon_e_s/dx_s/dx_s*(-2)*ones(1,ns),De_p/epsilon_e_p/dx_p/dx_p*(-2)*ones(1,np)])+...
+    diag([De_n/epsilon_e_n/dx_n/dx_n*ones(1,nn),De_s/epsilon_e_s/dx_s/dx_s*ones(1,ns),De_p/epsilon_e_p/dx_p/dx_p*ones(1,np)],1)+...
+    diag([De_n/epsilon_e_n/dx_n/dx_n*ones(1,nn),De_s/epsilon_e_s/dx_s/dx_s*ones(1,ns),De_p/epsilon_e_p/dx_p/dx_p*ones(1,np)],-1);
 
-A(1,2)=2*De_p/epsilon_e_p/dx_p/dx_p;
+A(1,2)=2*De_n/epsilon_e_n/dx_n/dx_n;
 
-A(np+1,np+1-1)=(2*De_p*dx_s )/(dx_p*dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s));% Cep[N-1]
-A(np+1,np+1)=(-2*De_p*dx_s-2*De_s*dx_p    )/(dx_p*dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s));% Cep[N}= Ces[0]
-A(np+1,np+1+1)=(2*De_s*dx_p  )/(dx_p*dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s)); % Ces[1]
+A(nn+1,nn+1-1)=(2*De_n*dx_s )/(dx_n*dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s));% Cen[N-1]
+A(nn+1,nn+1)=-(2*De_n*dx_s+2*De_s*dx_n    )/(dx_n*dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s));% Cen[N]= Ces[0]
+A(nn+1,nn+1+1)=(2*De_s*dx_n  )/(dx_n*dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s)); % Ces[1]
 
-A(np+ns+1,np+ns+1-1)=(2*De_s)/(dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s));% Cep[N-1]
-A(np+ns+1,np+ns+1)=-(2*(De_n*dx_s + De_s*dx_n))/(dx_n*dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s));% Cep[N}= Ces[0]
-A(np+ns+1,np+ns+1+1)=(2*De_n)/(epsilon_e_n*dx_n^2 + dx_s*epsilon_e_s*dx_n); % Ces[1]
+A(nn+ns+1,nn+ns+1-1)=(2*De_s)/(dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s));% Cep[N-1]
+A(nn+ns+1,nn+ns+1)=-(2*(De_p*dx_s + De_s*dx_p))/(dx_p*dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s));% Cep[N]= Ces[0]
+A(nn+ns+1,nn+ns+1+1)=(2*De_p)/(epsilon_e_p*dx_p^2 + dx_s*epsilon_e_s*dx_p); % Ces[1]
 
-A(np+ns+nn+1,np+ns+nn+1)=-2*De_n/epsilon_e_n/dx_n/dx_n;
-A(np+ns+nn+1,np+ns+nn)=2*De_n/epsilon_e_n/dx_n/dx_n;
+%A(np+ns+nn+1,np+ns+nn+1)=-2*De_p/epsilon_e_p/dx_p/dx_p;
+A(np+ns+nn+1,np+ns+nn)=2*De_p/epsilon_e_p/dx_p/dx_p;
 
+%A
 B=zeros(np+ns+nn+1,1);
 
-II=1:(np+1);
-kkp=(1-CC.t_plus)/epsilon_e_p/CC.F/CC.del_p;
-B(II)=-kkp;% % const J
-B(np+1)= -(dx_p^2*dx_s*epsilon_e_p*kkp)/(dx_p*dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s));
-
-IL = np+ns+1:np+ns+nn+1;
+II=1:(nn+1);
 kkn=(1-CC.t_plus)/epsilon_e_n/CC.F/CC.del_n;
-B(IL)=kkn;% % const J
-B(np+ns+1)= (dx_n^2*dx_s*epsilon_e_n*kkn)/(dx_n*dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s));
+B(II)=kkn;% % const J
+B(nn+1)= (dx_n^2*dx_s*epsilon_e_n*kkn)/(dx_n*dx_s*(dx_n*epsilon_e_n + dx_s*epsilon_e_s));
+
+IL = nn+ns+1:np+ns+nn+1;
+kkp=(1-CC.t_plus)/epsilon_e_p/CC.F/CC.del_p;
+B(IL)=-kkp;% % const J
+B(nn+ns+1)= -(dx_p^2*dx_s*epsilon_e_p*kkp)/(dx_p*dx_s*(dx_p*epsilon_e_p + dx_s*epsilon_e_s));
 
 %C=eye(np+ns+nn+1)
-C=[ones(1,np+1)*dx_p,ones(1,ns)*dx_s,ones(1,nn)*dx_n];
-C(1)=dx_p/2;
-C(np+1)=dx_p/2+dx_s/2;
-C(np+ns+1)=dx_n/2+dx_s/2;
-C(np+ns+nn+1)=dx_n/2;
+C=[ones(1,nn+1)*dx_n,ones(1,ns)*dx_s,ones(1,np)*dx_p];
+C(1)=dx_n/2;
+C(nn+1)=dx_n/2+dx_s/2;
+C(nn+ns+1)=dx_p/2+dx_s/2;
+C(np+ns+nn+1)=dx_p/2;
 
 CC.Ael = A;
 CC.Bel = B;
