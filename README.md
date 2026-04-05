@@ -6,8 +6,8 @@ Lithium Ion Battery SPMe with Mechanical, Thermal and Degradation
 
 * This model runs SPMe added submodels for Temperature, Expansion and Degradation.
 * Degradation mechanisms considered are: Lithium Plating, SEI formation and Mechanical Degradation
-* This model is created using Matlab 2020b and requires Simulink 2020b to run.
-* Version - 1
+* This model is created using Matlab 2025b and requires Simulink 2020b to run.
+* Version - 2
 
 ### How do I run the model? ###
 

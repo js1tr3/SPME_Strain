@@ -9,7 +9,7 @@ simtime = 60*60;
 % Initial SOC
 SOC_0 = 0.1;
 % Input Current in Amps
-Iin = -5*5;
+Iin = -5*5*2;
 % Positive for Discharge
 % Switch
 %  1 for Constant Current
